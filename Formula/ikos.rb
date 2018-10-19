@@ -11,7 +11,7 @@ class Ikos < Formula
   depends_on "llvm@4"
   depends_on "mpfr"
   depends_on "ppl"
-  depends_on "python"
+  depends_on "python@2" if MacOS.version <= :snow_leopard
 
   resource "Pygments" do
     url "https://files.pythonhosted.org/packages/71/2a/2e4e77803a8bd6408a2903340ac498cb0a2181811af7c9ec92cb70b0308a/Pygments-2.2.0.tar.gz"
@@ -35,8 +35,9 @@ class Ikos < Formula
   EOS
 
   def install
-    python_exe = Formula["python"].opt_libexec/"bin/python"
-    llvm_config_exe = Formula["llvm@4"].opt_prefix/"bin/llvm-config"
+    resource("Pygments").stage do
+      system "python", *Language::Python.setup_install_args(prefix)
+    end
 
     mkdir "build" do
       system "cmake",
@@ -48,14 +49,9 @@ class Ikos < Formula
              "-DPPL_ROOT=#{Formula["ppl"].opt_prefix}",
              "-DAPRON_ROOT=#{Formula["apron"].opt_prefix}",
              "-DCUSTOM_BOOST_ROOT=#{Formula["boost"].opt_prefix}",
-             "-DPYTHON_EXECUTABLE=#{python_exe}",
-             "-DLLVM_CONFIG_EXECUTABLE=#{llvm_config_exe}",
+             "-DLLVM_CONFIG_EXECUTABLE=#{Formula["llvm@4"].opt_prefix}/bin/llvm-config",
              ".."
       system "make", "install"
-    end
-
-    resource("Pygments").stage do
-      system python_exe, *Language::Python.setup_install_args(prefix)
     end
   end
 
