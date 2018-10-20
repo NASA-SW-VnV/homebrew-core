@@ -1,4 +1,5 @@
 class Ikos < Formula
+  include Language::Python::Virtualenv
   desc "Static analyzer for C/C++ based on the theory of Abstract Interpretation"
   homepage "https://github.com/nasa-sw-vnv/ikos"
   url "https://github.com/nasa-sw-vnv/ikos/archive/v2.0.tar.gz"
@@ -35,9 +36,8 @@ class Ikos < Formula
   EOS
 
   def install
-    resource("Pygments").stage do
-      system "python", *Language::Python.setup_install_args(prefix)
-    end
+    venv = virtualenv_create(libexec/"vendor")
+    venv.pip_install resources
 
     mkdir "build" do
       system "cmake",
@@ -49,6 +49,7 @@ class Ikos < Formula
              "-DPPL_ROOT=#{Formula["ppl"].opt_prefix}",
              "-DAPRON_ROOT=#{Formula["apron"].opt_prefix}",
              "-DCUSTOM_BOOST_ROOT=#{Formula["boost"].opt_prefix}",
+             "-DPYTHON_EXECUTABLE=#{libexec}/vendor/bin/python",
              "-DLLVM_CONFIG_EXECUTABLE=#{Formula["llvm@4"].opt_prefix}/bin/llvm-config",
              ".."
       system "make", "install"
