@@ -2,7 +2,7 @@ class Ikos < Formula
   include Language::Python::Virtualenv
   desc "Static analyzer for C/C++ based on the theory of Abstract Interpretation"
   homepage "https://github.com/nasa-sw-vnv/ikos"
-  url "https://github.com/nasa-sw-vnv/ikos/archive/v2.0.tar.gz"
+  url "https://github.com/NASA-SW-VnV/ikos/releases/download/v2.0/ikos-2.0.tar.gz"
   sha256 "03a93794651e51e639c47b8ef821f923f7951a11669a7ad3230a68f5f27e1c5f"
 
   depends_on "cmake" => :build
