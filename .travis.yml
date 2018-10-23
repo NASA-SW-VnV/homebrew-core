@@ -1,0 +1,21 @@
+language: cpp
+os: osx
+addons:
+  homebrew:
+    update: true
+    packages:
+    - cmake
+    - gmp
+    - mpfr
+    - ppl
+    - boost
+    - llvm@4
+script:
+  - brew tap nasa-sw-vnv/core
+  - brew install apron
+  - brew test apron
+  - brew install ikos
+  - brew test ikos
+env:
+  global:
+    - HOMEBREW_MAKE_JOBS=2
