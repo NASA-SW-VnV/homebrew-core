@@ -9,7 +9,7 @@ addons:
     - mpfr
     - ppl
     - boost
-    - llvm@4
+    - llvm@7
 script:
   - brew tap nasa-sw-vnv/core
   - brew install apron
