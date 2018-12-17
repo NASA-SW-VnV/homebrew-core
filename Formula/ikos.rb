@@ -12,7 +12,7 @@ class Ikos < Formula
   depends_on "llvm@7"
   depends_on "mpfr"
   depends_on "ppl"
-  depends_on "python@2" if MacOS.version <= :snow_leopard
+  depends_on "python"
 
   resource "Pygments" do
     url "https://files.pythonhosted.org/packages/63/a2/91c31c4831853dedca2a08a0f94d788fc26a48f7281c99a303769ad2721b/Pygments-2.3.0.tar.gz"
@@ -20,12 +20,12 @@ class Ikos < Formula
   end
 
   def install
-    venv = virtualenv_create(libexec/"vendor")
+    venv = virtualenv_create(libexec/"vendor", "python3")
     venv.pip_install resources
 
-    xy = Language::Python.major_minor_version "python"
+    xy = Language::Python.major_minor_version "python3"
     pth_contents = "import site; site.addsitedir('#{lib}/python#{xy}/site-packages')\n"
-    (libexec/"vendor/lib/python#{xy}/site-packages/homebrew_deps.pth").append_lines pth_contents
+    (libexec/"vendor/lib/python#{xy}/site-packages/homebrew_deps.pth").write pth_contents
 
     mkdir "build" do
       system "cmake",
