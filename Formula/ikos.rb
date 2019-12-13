@@ -2,14 +2,14 @@ class Ikos < Formula
   include Language::Python::Virtualenv
   desc "Static analyzer for C/C++ based on the theory of Abstract Interpretation"
   homepage "https://github.com/nasa-sw-vnv/ikos"
-  url "https://github.com/nasa-sw-vnv/ikos/releases/download/v2.2/ikos-2.2.tar.gz"
-  sha256 "4946d479cc8eb00b38960087c14982598b508077187162ec3b9771a82d21d4a5"
+  url "https://github.com/nasa-sw-vnv/ikos/releases/download/v3.0/ikos-3.0.tar.gz"
+  sha256 "bd42e84061c207ea7ca7f0c7d7aafa3cce72e951d33953b0ed8d68133b17c8b6"
 
   depends_on "cmake" => :build
   depends_on "apron"
   depends_on "boost"
   depends_on "gmp"
-  depends_on "llvm@8"
+  depends_on "llvm@9"
   depends_on "mpfr"
   depends_on "ppl"
   depends_on "python"
@@ -38,7 +38,7 @@ class Ikos < Formula
              "-DAPRON_ROOT=#{Formula["apron"].opt_prefix}",
              "-DCUSTOM_BOOST_ROOT=#{Formula["boost"].opt_prefix}",
              "-DPYTHON_EXECUTABLE=#{libexec}/vendor/bin/python",
-             "-DLLVM_CONFIG_EXECUTABLE=#{Formula["llvm@8"].opt_prefix}/bin/llvm-config",
+             "-DLLVM_CONFIG_EXECUTABLE=#{Formula["llvm@9"].opt_prefix}/bin/llvm-config",
              ".."
       system "make", "install"
     end
