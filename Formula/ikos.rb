@@ -26,7 +26,7 @@ class Ikos < Formula
 
     xy = Language::Python.major_minor_version "python3"
     pth_contents = "import site; site.addsitedir('#{lib}/python#{xy}/site-packages')\n"
-    (libexec/"vendor/lib/python#{xy}/site-packages/homebrew_deps.pth").write pth_contents
+    (libexec/"vendor/lib/python#{xy}/site-packages/homebrew-ikos.pth").write pth_contents
 
     mkdir "build" do
       system "cmake",
