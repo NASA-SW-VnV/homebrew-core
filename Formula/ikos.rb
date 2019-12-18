@@ -9,6 +9,7 @@ class Ikos < Formula
   depends_on "apron"
   depends_on "boost"
   depends_on "gmp"
+  depends_on "tbb"
   depends_on "llvm@9"
   depends_on "mpfr"
   depends_on "ppl"
