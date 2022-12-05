@@ -2,15 +2,16 @@ class Ikos < Formula
   include Language::Python::Virtualenv
   desc "Static analyzer for C/C++ based on the theory of Abstract Interpretation"
   homepage "https://github.com/nasa-sw-vnv/ikos"
-  url "https://github.com/nasa-sw-vnv/ikos/releases/download/v3.0/ikos-3.0.tar.gz"
-  sha256 "bd42e84061c207ea7ca7f0c7d7aafa3cce72e951d33953b0ed8d68133b17c8b6"
+  url "https://github.com/NASA-SW-VnV/ikos/archive/refs/tags/v3.1.tar.gz"
+  sha256 "268f59ae5b38262f3155b38f082e668be2e1b7f91c05f8b036b9b50bf2a05e66"
+  license "MIT"
 
   depends_on "cmake" => :build
   depends_on "apron"
   depends_on "boost"
   depends_on "gmp"
   depends_on "tbb"
-  depends_on "llvm@9"
+  depends_on "llvm@14"
   depends_on "mpfr"
   depends_on "ppl"
   depends_on "python"
@@ -39,7 +40,7 @@ class Ikos < Formula
              "-DAPRON_ROOT=#{Formula["apron"].opt_prefix}",
              "-DCUSTOM_BOOST_ROOT=#{Formula["boost"].opt_prefix}",
              "-DPYTHON_EXECUTABLE=#{libexec}/vendor/bin/python",
-             "-DLLVM_CONFIG_EXECUTABLE=#{Formula["llvm@9"].opt_prefix}/bin/llvm-config",
+             "-DLLVM_CONFIG_EXECUTABLE=#{Formula["llvm@14"].opt_prefix}/bin/llvm-config",
              ".."
       system "make", "install"
     end
@@ -59,7 +60,7 @@ class Ikos < Formula
         return 0;
       }
     EOS
-    output = shell_output("#{bin}/ikos test.c")
+    output = shell_output("#{bin}/ikos -a boa test.c")
     assert_includes output.split("\n"), "The program is SAFE"
   end
 end
