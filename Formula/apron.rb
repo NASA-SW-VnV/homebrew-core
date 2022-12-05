@@ -3,6 +3,7 @@ class Apron < Formula
   homepage "http://apron.cri.ensmp.fr/library/"
   url "http://apron.cri.ensmp.fr/library/apron-0.9.10.tgz"
   sha256 "b108de2f4a8c4ecac1ff76a6d282946fd3bf1466a126cf5344723955f305ec8e"
+  revision 1
 
   depends_on "gmp"
   depends_on "mpfr"
@@ -46,6 +47,30 @@ class Apron < Formula
 
      #---------------------------------------
      # C rules
+  EOS
+
+  # Fix compiler error about strdup
+  patch :p0, <<~EOS
+    --- apron/ap_config.h
+    +++ apron/ap_config.h
+    @@ -23,17 +23,6 @@
+     static const bool true  = 1;
+     #endif
+
+    -#if !(defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __APPLE__ || defined __CYGWIN__)
+    -
+    -static inline char* strdup(const char* s){
+    -  char* s2;
+    -
+    -  s2 = malloc(strlen(s)+1);
+    -  strcpy(s2,s);
+    -  return s2;
+    -}
+    -#endif
+    -
+     #ifdef __cplusplus
+     }
+     #endif
   EOS
 
   def install
