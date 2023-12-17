@@ -2,9 +2,9 @@ class Ikos < Formula
   include Language::Python::Virtualenv
   desc "Static analyzer for C/C++ based on the theory of Abstract Interpretation"
   homepage "https://github.com/nasa-sw-vnv/ikos"
-  url "https://github.com/NASA-SW-VnV/ikos/archive/refs/tags/v3.1.tar.gz"
-  sha256 "e2a9ff32d02aeff92abbb8f69f1a6730ad96b6f59a10e18c30522d033f950844"
-  license "MIT"
+  url "https://github.com/NASA-SW-VnV/ikos/archive/refs/tags/v3.2-rc1.tar.gz"
+  sha256 "b21b2a102c2cb8c413d5f9a56872a797e1eb40d3d127d43adb6b0e8b4134c9b2"
+  license "NOSA"
   revision 1
 
   depends_on "cmake" => :build
@@ -15,7 +15,7 @@ class Ikos < Formula
   depends_on "llvm@14"
   depends_on "mpfr"
   depends_on "ppl"
-  depends_on "python"
+  depends_on "python@3"
 
   resource "Pygments" do
     url "https://files.pythonhosted.org/packages/7e/ae/26808275fc76bf2832deb10d3a3ed3107bc4de01b85dcccbe525f2cd6d1e/Pygments-2.4.2.tar.gz"
@@ -23,13 +23,16 @@ class Ikos < Formula
   end
 
   def install
-    venv = virtualenv_create(libexec/"vendor", "python3")
+    venv = virtualenv_create(libexec, "python3")
     venv.pip_install resources
 
     xy = Language::Python.major_minor_version "python3"
     pth_contents = "import site; site.addsitedir('#{lib}/python#{xy}/site-packages')\n"
-    (libexec/"vendor/lib/python#{xy}/site-packages/homebrew-ikos.pth").write pth_contents
+    (libexec/"lib/python#{xy}/site-packages/homebrew-ikos.pth").write pth_contents
 
+    # We install with IKOS' virtualenv disabled because we are using the
+    # virtualenv in libexec (the one created by this formula). We also adjust
+    # python to point to the python executable in that virtualenv.
     mkdir "build" do
       system "cmake",
              "-G", "Unix Makefiles",
@@ -40,10 +43,18 @@ class Ikos < Formula
              "-DPPL_ROOT=#{Formula["ppl"].opt_prefix}",
              "-DAPRON_ROOT=#{Formula["apron"].opt_prefix}",
              "-DCUSTOM_BOOST_ROOT=#{Formula["boost"].opt_prefix}",
-             "-DPYTHON_EXECUTABLE=#{libexec}/vendor/bin/python",
+             "-DPYTHON_EXECUTABLE=#{libexec}/bin/python",
              "-DLLVM_CONFIG_EXECUTABLE=#{Formula["llvm@14"].opt_prefix}/bin/llvm-config",
+             "-DINSTALL_PYTHON_VIRTUALENV=OFF",
+             "-DPYTHON_VENV_EXECUTABLE=#{libexec}/bin/python",
              ".."
       system "make", "install"
+
+      # We specifically install the ikos python package in the virtualenv.
+      chdir "analyzer/python" do
+        system "#{libexec}/bin/python", "-m", "pip", "install", "."
+      end
+
     end
   end
 
