@@ -2,8 +2,8 @@ class Ikos < Formula
   include Language::Python::Virtualenv
   desc "Static analyzer for C/C++ based on the theory of Abstract Interpretation"
   homepage "https://github.com/nasa-sw-vnv/ikos"
-  url "https://github.com/NASA-SW-VnV/ikos/archive/refs/tags/v3.2.tar.gz"
-  sha256 "11ab520043523a048f8756d68bd3f6a761870d4ec1a9f240eda8f3b1a11f7aa1"
+  url "https://github.com/NASA-SW-VnV/ikos/archive/refs/tags/v3.3.tar.gz"
+  sha256 "27b26dede55cbbda2c090d268db430dd64c01c663ea185c1a07e4c95eda15cd5"
   license "NOSA"
   revision 1
 
