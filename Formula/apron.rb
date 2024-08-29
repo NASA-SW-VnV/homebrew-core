@@ -11,7 +11,7 @@ class Apron < Formula
 
   def install
     ENV.deparallelize
-    cp "Makefile.config.model", "Makefile.config"
+    system "./configure --absolute-dylibs --no-strip"
     system "make",
            "APRON_PREFIX=#{prefix}",
            "GMP_PREFIX=#{Formula["gmp"].opt_prefix}",
