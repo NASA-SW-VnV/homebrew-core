@@ -1,8 +1,8 @@
 class Apron < Formula
   desc "Numerical abstract domain library"
   homepage "http://apron.cri.ensmp.fr/library/"
-  url "http://apron.cri.ensmp.fr/library/apron-0.9.10.tgz"
-  sha256 "b108de2f4a8c4ecac1ff76a6d282946fd3bf1466a126cf5344723955f305ec8e"
+  url "https://github.com/antoinemine/apron/archive/refs/tags/v0.9.15.tar.gz"
+  sha256 "5778fa1afaf0b36fe6a79989fc4374b0b3ece8a5e46a7ab195440209ccd67b1b"
   revision 1
 
   depends_on "gmp"
