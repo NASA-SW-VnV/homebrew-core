@@ -3,7 +3,7 @@ class Apron < Formula
   homepage "http://apron.cri.ensmp.fr/library/"
   url "https://github.com/antoinemine/apron/archive/refs/tags/v0.9.15.tar.gz"
   sha256 "5778fa1afaf0b36fe6a79989fc4374b0b3ece8a5e46a7ab195440209ccd67b1b"
-  revision 1
+  revision 2
 
   depends_on "gmp"
   depends_on "mpfr"
