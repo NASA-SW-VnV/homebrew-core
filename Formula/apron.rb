@@ -1,81 +1,17 @@
 class Apron < Formula
   desc "Numerical abstract domain library"
   homepage "http://apron.cri.ensmp.fr/library/"
-  url "http://apron.cri.ensmp.fr/library/apron-0.9.10.tgz"
-  sha256 "b108de2f4a8c4ecac1ff76a6d282946fd3bf1466a126cf5344723955f305ec8e"
-  revision 1
+  url "https://github.com/antoinemine/apron/archive/refs/tags/v0.9.15.tar.gz"
+  sha256 "5778fa1afaf0b36fe6a79989fc4374b0b3ece8a5e46a7ab195440209ccd67b1b"
+  revision 2
 
   depends_on "gmp"
   depends_on "mpfr"
   depends_on "ppl"
 
-  # Fix compiler error about 'invalid operands to binary expression'
-  # Upstream commit r1050, remove for next version
-  patch :p0, <<~EOS
-    --- ppl/ppl_user.cc
-    +++ trunk/ppl/ppl_user.cc
-    @@ -320,7 +320,12 @@
-           exact = false;
-         }
-         /* singleton */
-    -    else r.insert(Constraint(Variable(i)==temp));
-    +    else {
-    +      /* integerness check */
-    +      mpz_class temp2 = mpz_class(temp);
-    +      if (temp==temp2) r.insert(Constraint(Variable(i)==temp2));
-    +      else exact = false;
-    +    }
-       }
-       return exact;
-     }
-  EOS
-
-  # Fix linker error
-  # Upstream commit r1069, remove for next version
-  patch :p0, <<~EOS
-    --- products/Makefile
-    +++ products/Makefile
-    @@ -117,9 +117,9 @@
-     	$(AR) rcs $@ $^
-     	$(RANLIB) $@
-     libap_pkgrid.so: ap_pkgrid.o
-    -	$(CXX) $(CXXFLAGS) -shared -o $@ $^ $(LIBS)
-    +	$(CXX) $(CXXFLAGS) -shared -o $@ $^ -L../newpolka -lpolkaMPQ $(LIBS)
-     libap_pkgrid_debug.so: ap_pkgrid_debug.o
-    -	$(CXX) $(CXXFLAGS_DEBUG) -shared -o $@ $^ $(LIBS_DEBUG)
-    +	$(CXX) $(CXXFLAGS_DEBUG) -shared -o $@ $^ -L../newpolka -lpolkaMPQ $(LIBS_DEBUG)
-
-     #---------------------------------------
-     # C rules
-  EOS
-
-  # Fix compiler error about strdup
-  patch :p0, <<~EOS
-    --- apron/ap_config.h
-    +++ apron/ap_config.h
-    @@ -23,17 +23,6 @@
-     static const bool true  = 1;
-     #endif
-
-    -#if !(defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __APPLE__ || defined __CYGWIN__)
-    -
-    -static inline char* strdup(const char* s){
-    -  char* s2;
-    -
-    -  s2 = malloc(strlen(s)+1);
-    -  strcpy(s2,s);
-    -  return s2;
-    -}
-    -#endif
-    -
-     #ifdef __cplusplus
-     }
-     #endif
-  EOS
-
   def install
     ENV.deparallelize
-    cp "Makefile.config.model", "Makefile.config"
+    system "./configure --absolute-dylibs --no-strip"
     system "make",
            "APRON_PREFIX=#{prefix}",
            "GMP_PREFIX=#{Formula["gmp"].opt_prefix}",
