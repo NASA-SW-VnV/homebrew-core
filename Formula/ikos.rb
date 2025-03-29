@@ -23,6 +23,12 @@ class Ikos < Formula
   end
 
   def install
+
+    # Fix for https://github.com/NASA-SW-VnV/homebrew-core/issues/24
+    on_macos do
+      ENV["HOMEBREW_SDKROOT"] = system "xcrun", "--show-sdk-path", "--sdk", "macosx"
+    end
+
     venv = virtualenv_create(libexec, "python3")
     venv.pip_install resources
 
